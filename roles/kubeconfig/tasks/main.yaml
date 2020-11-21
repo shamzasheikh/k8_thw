@@ -1,0 +1,56 @@
+- name: Copy admin.kubeconfig.j2
+  template:
+    src: "admin.kubeconfig.j2"
+    dest: "{{ kubernetes_ca_depot/admin.kubeconfig }}"
+- name: Copy kube-controller-manager.kubeconfig.j2
+  template:
+    src: "kube-controller-manager.kubeconfig.j2"
+    dest: "{{ kubernetes_ca_depot/kube-controller-manager.kubeconfig }}"
+- name: Copy kube-proxy.kubeconfig.j2
+  template:
+    src: "kube-proxy.kubeconfig.j2"
+    dest: "{{ kubernetes_ca_depot/kube-proxy.kubeconfig }}"
+- name: Copy admin.kubeconfig.j2
+- name: Copy kube-scheduler.kubeconfig.j2
+  template:
+    src: "kube-scheduler.kubeconfig.j2"
+    dest: "{{ kubernetes_ca_depot/kube-scheduler.kubeconfig }}"
+- name: Distribute Kubernetes Configuration Files
+  copy:
+   src: "{{ item }}"
+   dest: "{{ destfol }}"
+  with_items:
+  - "{{ kubernetes_ca_depot/admin.kubeconfig }}"
+  - "{{ kubernetes_ca_depot/kube-controller-manager.kubeconfig }}"
+  - "{{ kubernetes_ca_depot/kube-proxy.kubeconfig }}"
+  - "{{ kubernetes_ca_depot/kube-scheduler.kubeconfig }}"
+
+
+
+- name: Copy admin.kubeconfig.j2
+  template:
+    src: "admin.kubeconfig.j2"
+    dest: "{{ kubernetes_ca_depot/admin.kubeconfig }}"
+- name: Copy kube-controller-manager.kubeconfig.j2
+  template:
+    src: "kube-controller-manager.kubeconfig.j2"
+    dest: "{{ kubernetes_ca_depot/kube-controller-manager.kubeconfig }}"
+- name: Copy kube-proxy.kubeconfig.j2
+  template:
+    src: "kube-proxy.kubeconfig.j2"
+- name: Copy admin.kubeconfig.j2
+    dest: "{{ kubernetes_ca_depot/kube-proxy.kubeconfig }}"
+- name: Copy kube-scheduler.kubeconfig.j2
+  template:
+    src: "kube-scheduler.kubeconfig.j2"
+    dest: "{{ kubernetes_ca_depot/kube-scheduler.kubeconfig }}"
+- name: Distribute Kubernetes Configuration Files
+  copy:
+   src: "{{ item }}"
+   dest: "{{ destfol }}"
+  with_items:
+   - "{{ kubernetes_ca_depot/admin.kubeconfig }}"
+   - "{{ kubernetes_ca_depot/kube-controller-manager.kubeconfig }}"
+   - "{{ kubernetes_ca_depot/kube-proxy.kubeconfig }}"
+   - "{{ kubernetes_ca_depot/kube-scheduler.kubeconfig }}"
+

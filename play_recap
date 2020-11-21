@@ -1,0 +1,26 @@
+LAY RECAP *********************************************************************************************************************************************************************************************************************************
+  file: path={{kubernetes_ca_depot}} mode=0755 state=directory
+- name: Copy openssl.cnf.j2
+  template:
+    src: "openssl.cnf.j2"
+    dest: "{{kubernetes_ca_depot}}/openssl.cnf"
+- name: Copy openssl-etcd.cnf.j2
+  template:
+    src: "openssl-etcd.cnf.j2"
+    dest: "{{kubernetes_ca_depot}}/openssl-etcd.cnf"
+#- name: Creating Server Certificate
+#  command: openssl x509 -req -in ca.csr -signkey ca.key -CAcreateserial  -out ca.crt -days 1000
+- name: Creating CSR
+  shell: openssl req -new -key "{{kubernetes_ca_depot}}/ca.key" -subj "/CN=KUBERNETES-CA" -out "{{kubernetes_ca_depot}}/ca.csr"
+- name: Creating CSR admin.csr
+  shell: openssl req -new -key "{{kubernetes_ca_depot}}/admin.key" -subj "/CN=admin/O=system:masters" -out "{{kubernetes_ca_depot}}/admin.csr"
+- name: Creating CSR kube-controller-manager
+  shell: openssl req -new -key "{{kubernetes_ca_depot}}/kube-controller-manager.key" -subj "/CN=system:kube-controller-manager" -out "{{kubernetes_ca_depot}}/kube-controller-manager.csr"
+- name: Creating CSR kube-proxy.csr
+  shell: openssl req -new -key "{{kubernetes_ca_depot}}/kube-proxy.key" -subj "/CN=system:kube-proxy" -out "{{kubernetes_ca_depot}}/kube-proxy.csr"
+- name: Creating CSR kube-scheduler.csr
+  shell: openssl req -new -key "{{kubernetes_ca_depot}}/kube-scheduler.key" -subj "/CN=system:kube-scheduler" -out "{{kubernetes_ca_depot}}/kube-scheduler.csr"
+- name: Creating CSR kube-apiserver.csr
+  shell: openssl req -new -key "{{kubernetes_ca_depot}}/kube-apiserver.key" -subj "/CN=kube-apiserver" -out "{{kubernetes_ca_depot}}/kube-apiserver.csr" -config "{{kubernetes_ca_depot}}"/openssl.cnf
+- name: Creating CSR etcd-server.csr
+  shell: openssl req -new -key "{{kubernetes_ca_depot}}/etcd-server.key" -subj "/CN=etcd-server" -out "{{kubernetes_ca_depot}}/etcd-server.csr" -config "{{kubernetes_ca_depot}}"/openssl-etcd.cnf

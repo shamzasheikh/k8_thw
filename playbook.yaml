@@ -1,0 +1,30 @@
+---
+- name: Prerequisites and dependency setup
+  hosts: allservers
+  vars_files:
+   - variable.yaml 
+  gather_facts: yes
+  become: yes
+  roles:
+  - kubectl
+
+
+---
+- name: Install Client and create certificates
+  hosts: allservers
+  vars_files:
+   - vplaybook.yaml 
+  gather_facts: yes
+  become: yes
+  roles:
+#  - kubectl
+#  #  - ca_tls
+#     - kubeconfig
+#     #- name: Distrubute master certificates
+#     #  hosts: controlplane
+#     #  vars_files:
+#     #   - variable.yaml
+#     #  gather_facts: yes
+#     #  become: yes
+#     #  roles:
+#     #  - cert_dis

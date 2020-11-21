@@ -1,0 +1,25 @@
+# var for roles/kubectl/tasks/main.yaml
+# kubectl_url: https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
+# # var for roles/ca_tls/tasks/main.yaml
+# server_hostname: computingforgeeks.com
+# key_size: 4096
+# passphrase: # Set if you want passphrase
+# key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
+# country_name: KE
+# email_address: admin@computingforgeeks.com
+# organization_name: Computingforgeeks
+#
+#
+# # var for roles/kubectl/tasks/main.yaml
+# kubectl_url: https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
+# # var for roles/ca_tls/tasks/main.yaml
+# #server_hostname: computingforgeeks.com
+# key_size: 2048
+# #passphrase: # Set if you want passphrase
+# key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
+# #country_name: KE
+# #email_address: admin@computingforgeeks.com
+# #organization_name: Computingforgeeks
+# #kubernetes_ca_depot: "/var/lib/kubernetes-ca/depot"
+#
+#

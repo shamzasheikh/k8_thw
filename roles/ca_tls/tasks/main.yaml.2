@@ -1,0 +1,36 @@
+- name: make sure kubernetes-ca depot exists
+  file: path={{kubernetes_ca_depot}} mode=0755 state=directory
+- name: Copy openssl.cnf.j2
+  template:
+    src: "openssl.cnf.j2"
+    dest: "{{kubernetes_ca_depot}}"
+- name: Copy openssl-etcd.cnf.j2
+  template:
+    src: "openssl-etcd.cnf.j2"
+    dest: "{{kubernetes_ca_depot}}"
+- name: Generate a Self Signed OpenSSL CA certificate
+  community.crypto.x509_certificate:
+    path: ca.crt
+    privatekey_path: ca.key
+    csr_path: ca.csr
+    provider: selfsigned
+- name: Generate an OpenSSL certificate signed with your own CA certificate
+  community.crypto.x509_certificate:
+    path: "{{ item }}.crt"
+    csr_path: "{{ item }}.csr"
+    ownca_path: ca.crt
+    ownca_privatekey_path: ca.key
+    ownca_not_after: +1000d"
+    provider: ownca
+  with_items: 
+  - admin
+  - kube-controller-manager
+  - kube-proxy
+  community.crypto.x509_certificate:
+  - kube-scheduler
+  - service-account
+- name: generate apiserver crt
+  shell: >
+    openssl x509a -req -in kube-apiserver.csr -CA ca.crt -CAkey ca.key -CAcreateserial  -out kube-apiserver.c
+rt -extensions v3_req -extfile {{kubernetes_ca_depot}}/openssl.cnf -days 1000
+- name: Generate an OpenSSL private key
