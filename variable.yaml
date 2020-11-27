@@ -1,5 +1,5 @@
 # var for roles/kubectl/tasks/main.yaml
-# kubectl_url: https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
+#kubectl_url: https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
 # # var for roles/ca_tls/tasks/main.yaml
 # server_hostname: computingforgeeks.com
 # key_size: 4096
@@ -11,7 +11,15 @@
 #
 #
 # # var for roles/kubectl/tasks/main.yaml
-# kubectl_url: https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
+kubectl_url: https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
+key_size: 2048
+key_type: RSA
+etcd_url: "https://github.com/coreos/etcd/releases/download/v3.3.9/etcd-v3.3.9-linux-amd67.tar.gz"
+kube-apiserver_url: "https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-apiserver" \
+kube-controller-manager_url: "https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-controller-manager" \
+kube-scheduler_url: "https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kube-scheduler" \
+kubectl_url: "https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl"
+kubernetes_ca_depot: "/var/lib/kubernetes-ca/depot"
 # # var for roles/ca_tls/tasks/main.yaml
 # #server_hostname: computingforgeeks.com
 # key_size: 2048

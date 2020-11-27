@@ -1,6 +1,12 @@
+- name: Make sure certficate directory exists
+  file:
+    path: "certficates"
+    state: directory
+    mode: '0755'
+  
 - name: Generate an OpenSSL private key
   openssl_privatekey:
-    path: "{{ item }}.key"
+    path: "certficates/{{ item }}.key"
     size: "{{ key_size }}"
     type: "{{ key_type }}"
     backup: yes
@@ -13,3 +19,10 @@
   - kube-apiserver
   - etcd-server
   - service-account
+
+- name: Create CSR using the private key
+  openssl_csr:
+        path: "certficates//{{ item }}.csr"
+        privatekey_path: "certficates/{{ item }}.key"
+        common_name: "{{ server_hostname }}"
+  

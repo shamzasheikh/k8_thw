@@ -1,0 +1,10 @@
+- name: Generate an encryption key
+  command: ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)
+
+- name: Copy encryption-config.yaml.j2
+  template:
+    src: "encryption-config.yaml.j2"
+    dest: "encryption-config.yaml"
+
+- name: Copy the encryption-config.yaml encryption config file to each controller instance
+  

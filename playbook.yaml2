@@ -1,4 +1,14 @@
 ---
+- name: Prerequisites and dependency setup
+  hosts: loadbalancer
+  vars_files:
+   - variable.yaml 
+  gather_facts: yes
+  become: yes
+  roles:
+  - ca_tls
+
+
 - name: Generating the Data Encryption Config and Key
   hosts: loadbalancer
   vars_files:

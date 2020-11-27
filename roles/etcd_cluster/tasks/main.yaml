@@ -1,0 +1,57 @@
+- name: Download and Install the etcd Binaries
+  get_url:
+    url: "{{ etcd_url }}"
+    mode: '0440'
+
+
+- name: Extract and install the etcd server and the etcdctl command line utility
+  unarchive:
+    src: etcd-v3.3.9-linux-amd64.tar.gz
+    dest: /usr/local/bin/
+    extra_opts: [--strip-components=1]
+
+
+- name: Configure the etcd Server
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+  with_items:
+  - /etc/etcd
+  - /var/lib/etcd
+
+- name: Configure the etcd Server
+  copy:
+    src: "{{ item }}"
+    dest: /etc/etcd
+    mode: '0644'
+  with_items:
+  - ca.crt 
+  - etcd-server.key 
+  - etcd-server.crt
+
+
+- name: Retrieve the internal IP address of the master(etcd) nodes
+  command: INTERNAL_IP=$(ip addr show enp0s8 | grep "inet " | awk '{print $2}' | cut -d / -f 1)
+
+- name: Set the etcd name to match the hostname of the current compute instance
+  command: ETCD_NAME=$(hostname -s)
+
+- name: Copy etcd.service.j2
+  template:
+    src: "etcd.service.j2"
+    dest: "/etc/systemd/system/etcd.service"
+
+
+- name: Just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: Start and enable the etcd Server
+  systemd: 
+    name: etcd
+    state: started
+    enabled: yes
+
+
