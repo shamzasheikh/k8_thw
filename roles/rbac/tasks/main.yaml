@@ -1,0 +1,6 @@
+
+- task: Create ClusterRole permissions to access the Kubelet
+  shell: kubectl apply --kubeconfig admin.kubeconfig -f 
+
+- task: Create ClusterRoleBinding
+  shell: kubectl apply --kubeconfig admin.kubeconfig -f

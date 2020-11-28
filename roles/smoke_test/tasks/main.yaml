@@ -1,0 +1,27 @@
+task: Data Encryption-Create a generic secret
+shell: kubectl create secret generic kubernetes-the-hard-way --from-literal="mykey=mydata"
+
+
+task: Print a hexdump of the kubernetes-the-hard-way secret stored in etcd
+shell: 
+
+task: Create a deployment for the nginx web server
+shell: kubectl create deployment nginx --image=nginx && kubectl get pods -l app=nginx
+
+
+task: Create a service to expose deployment nginx on node ports
+shell: kubectl expose deploy nginx --type=NodePort --port 80
+
+task: 
+shell: PORT_NUMBER=$(kubectl get svc -l app=nginx -o jsonpath="{.items[0].spec.ports[0].nodePort}")
+
+task:
+curl http://worker-1:$PORT_NUMBER
+curl http://worker-2:$PORT_NUMBER
+
+POD_NAME=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].metadata.name}")
+
+kubectl logs $POD_NAME
+
+
+

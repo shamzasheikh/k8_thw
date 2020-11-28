@@ -1,0 +1,99 @@
+- name: Download and Install the worker Binaries
+  get_url:
+    url: "{{ item }}"
+  with_items:
+  - "{{ kubectl_url }}"
+  - "{{ kube_proxy_url }}"
+  - "{{ kubelet_url }}"
+
+- name: Create the installation directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+  with_items:
+  - /etc/cni/net.d
+  - /opt/cni/bin
+  - /var/lib/kubelet
+  - /var/lib/kube-proxy
+  - /var/lib/kubernetes
+  - /var/run/kubernetes
+
+- name: Install the worker Binaries
+  shell: chmod +x kubectl kube-proxy kubelet && mv kubectl kube-proxy kubelet /usr/local/bin/
+
+- name: Move the ca certificate
+  command: mv ca.crt /var/lib/kubernetes/
+
+- name: Copy all files to template
+  template:
+    src: "{{ item }}"
+    dest: "{{ kube_configs }}"
+  with_fileglob:
+    - ../templates/*.j2
+
+- name: Create the Boostrap Token to be used by Nodes(Kubelets) to invoke Certificate API
+  community.kubernetes.k8s:
+    state: present
+    src: bootstrap-token-07401b.yaml
+  register: bootstrap_token
+
+
+- name: Authorize workers(kubelets) to create/approve CSR and Auto Renew Certificates
+  community.kubernetes.k8s:
+    state: present
+    src: "{{ item }}"
+  with_items:
+  - csrs-for-bootstrapping.yaml
+  - auto-approve-csrs-for-group.yaml
+  - auto-approve-renewals-for-nodes.yaml
+
+- name: Configure Kubelet to TLS Bootstrap
+  copy:
+    src: bootstrap-kubeconfig.j2
+    dest: /var/lib/kubelet/bootstrap-kubeconfig
+  
+- name: Create Kubelet Config File
+  copy:
+    src: kubelet-config.yaml.j2
+    dest: /var/lib/kubelet/kubelet-config.yaml
+
+
+- name: Configure Kubelet Service
+  copy: 
+    src: kubelet.service.j2
+    dest: /etc/systemd/system/kubelet.service
+
+- name: Crete  Kubernetes Proxy config
+  copy:
+    src: kube-proxy-config.yaml.j2
+    dest: /var/lib/kube-proxy/kube-proxy-config.yaml
+
+- name: Configure the Kubernetes Proxy
+  template:
+    src: kube-proxy.service.j2
+    dest: /etc/systemd/system/kube-proxy.service
+
+
+- name: Start the Worker Services
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_item:
+  - kubelet
+  - kube-proxy
+
+- name: Get Server CSR
+  command: kubectl get csr
+  register: csr_name
+
+- name: Approve Server CSR
+  command: kubectl certificate approve {{ csr_name }}
+
+
+
+
+
+

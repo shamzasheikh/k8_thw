@@ -1,0 +1,13 @@
+- name: distribute certs and keys to masters
+  copy:
+    src: "{{ item }}"
+    dest: ~/
+  with_items:
+  - ca.crt
+  - ca.key
+  - kube-apiserver.key
+  - kube-apiserver.crt
+  - service-account.key
+  - service-account.crt
+  - etcd-server.key
+  - etcd-server.crt

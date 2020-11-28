@@ -1,0 +1,5 @@
+- task: Deploy the coredns cluster add-on
+  shell: kubectl apply -f coredns.yaml
+
+- task: List the pods created by the kube-dns deployment
+  shell: kubectl get pods -l k8s-app=kube-dns -n kube-system

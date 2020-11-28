@@ -1,0 +1,9 @@
+- name: Download the CNI Plugins
+  get_url:
+    url: "{{ cni_url }}"
+    mode: '0440'
+
+- name: Extract foo.tgz into /var/lib/foo
+  unarchive:
+    src: "{{ cni_tar }}"
+    dest: /opt/cni/bin/

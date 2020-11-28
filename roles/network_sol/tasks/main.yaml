@@ -1,0 +1,7 @@
+- name: get kubectl version
+  shell: kubectl version | base64 | tr -d '\n'
+  register: kubeletv
+
+- name: Deploy network solution 
+  shell: kubectl apply -f "{{ weave_url }}"
+

@@ -6,23 +6,13 @@
   gather_facts: yes
   become: yes
   roles:
-  - dataencrypt
-#---
-#- name: Install Client and create certificates
-#  hosts: allservers
-#  vars_files:
-#   - variable.yaml 
-#  gather_facts: yes
-#  become: yes
-#  roles:
-#  - kubectl
-#  #  - ca_tls
-#     - kubeconfig
-#     #- name: Distrubute master certificates
-#     #  hosts: controlplane
-#     #  vars_files:
-#     #   - variable.yaml
-#     #  gather_facts: yes
-#     #  become: yes
-#     #  roles:
-#     #  - cert_dis
+  - ca_tls
+
+- name: distribute certs
+  hosts: controlplane
+  vars_files:
+   - variable.yaml
+  gather_facts: yes
+  become: yes
+  roles:
+  - distribute
