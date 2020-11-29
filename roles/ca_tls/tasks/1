@@ -1,0 +1,27 @@
+- name: Make sure certficate directory exists
+  file:
+    path: "certficates"
+    state: directory
+    mode: '0755'
+  
+- name: Generate an OpenSSL private key
+  openssl_privatekey:
+    path: "{{ item }}.key"
+    size: "{{ key_size }}"
+    type: "{{ key_type }}"
+    backup: yes
+  with_items:
+  - ca
+  - admin
+  - kube-controller-manager
+  - kube-proxy
+  - kube-scheduler
+  - kube-apiserver
+  - etcd-server
+  - service-account
+
+#- name: Distribute the Certificates
+#  import_tasks: dist.yaml
+
+
+ 

@@ -1,0 +1,106 @@
+- name: Generate CA CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/ca.csr'
+    privatekey_path: '{{ PKI_DIR }}/ca.key'
+    basic_constraints: "CA:TRUE"
+    basic_constraints_critical: True
+    key_usage: cRLSign, keyCertSign
+    key_usage_critical: True
+    organizational_unit_name: 'k8s the hard way'
+    common_name: KUBERNETES-CA
+
+- name: Generate Admin CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/admin.csr'
+    privatekey_path: '{{ PKI_DIR }}/admin.key'
+    basic_constraints: "CA:FALSE"
+    basic_constraints_critical: True
+    key_usage: digitalSignature, keyEncipherment
+    key_usage_critical: True
+    extended_key_usage: serverAuth, clientAuth
+    common_name: admin
+    organization_name: "system:masters"
+    organizational_unit_name: 'k8s the hard way'
+
+- name: Generate Kube Controller Manager CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/kube-controller-manager.csr'
+    privatekey_path: '{{ PKI_DIR }}/kube-controller-manager.key'
+    basic_constraints: "CA:FALSE"
+    basic_constraints_critical: True
+    key_usage: digitalSignature, keyEncipherment
+    key_usage_critical: True
+    extended_key_usage: serverAuth, clientAuth
+    common_name: 'system:kube-controller-manager'
+    #organization_name: 'system:node-proxier'
+    organizational_unit_name: 'k8s the hard way'
+
+- name: Generate Kube Proxy CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/kube-proxy.csr'
+    privatekey_path: '{{ PKI_DIR }}/kube-proxy.key'
+    basic_constraints: "CA:FALSE"
+    basic_constraints_critical: True
+    key_usage: digitalSignature, keyEncipherment
+    key_usage_critical: True
+    extended_key_usage: serverAuth, clientAuth
+    common_name: 'system:kube-proxy'
+    #organization_name: 'system:node-proxier'
+    organizational_unit_name: 'k8s the hard way'
+
+- name: Generate Kube Scheduler CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/kube-scheduler.csr'
+    privatekey_path: '{{ PKI_DIR }}/kube-scheduler.key'
+    basic_constraints: "CA:FALSE"
+    basic_constraints_critical: True
+    key_usage: digitalSignature, keyEncipherment
+    key_usage_critical: True
+    extended_key_usage: serverAuth, clientAuth
+    common_name: 'system:kube-scheduler'
+    #organization_name: 'system:node-proxier'
+    organizational_unit_name: 'k8s the hard way'
+
+- name: Generate Kubernetes API Server  CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/kube-apiserver.csr'
+    privatekey_path: '{{ PKI_DIR }}/kube-apiserver.key'
+    basic_constraints: "CA:FALSE"
+    basic_constraints_critical: True 
+    key_usage: digitalSignature, keyEncipherment, nonRepudiation
+    key_usage_critical: True
+    extended_key_usage: serverAuth, clientAuth
+    common_name: 'system:kube-scheduler'
+    subject_alt_name: 'kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster.local,{{ masters_ips }}'
+
+- name: Generate ETCD Server CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/etcd-server.csr'
+    privatekey_path: '{{ PKI_DIR }}/etcd-server.key'
+    basic_constraints: "CA:FALSE"
+    basic_constraints_critical: True
+    key_usage: digitalSignature, keyEncipherment, nonRepudiation
+    key_usage_critical: True
+    extended_key_usage: serverAuth, clientAuth
+    common_name: 'system:kube-scheduler'
+    subject_alt_name: "{{ masters_ips }}"
+
+
+
+    #organization_name: 'system:node-proxier'
+    #    organizational_unit_name: 'k8s the hard way'
+
+
+- name: Generate Service Account CSR
+  openssl_csr:
+    path: '{{ PKI_DIR }}/service-account.csr'
+    privatekey_path: '{{ PKI_DIR }}/service-account.key'
+    basic_constraints: "CA:FALSE"
+    basic_constraints_critical: True
+    key_usage: digitalSignature, keyEncipherment
+    key_usage_critical: True
+    extended_key_usage: serverAuth, clientAuth
+    common_name: 'service-accounts'
+    #organization_name: 'system:node-proxier'
+    organizational_unit_name: 'k8s the hard way'
+

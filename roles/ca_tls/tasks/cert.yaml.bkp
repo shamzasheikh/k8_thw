@@ -1,0 +1,75 @@
+- name: Generate CA certificate
+  openssl_certificate:
+    path: '{{ PKI_DIR }}/ca.crt'
+    privatekey_path: '{{ PKI_DIR }}/ca.key'
+    csr_path: '{{ PKI_DIR }}/ca.csr'
+    provider: selfsigned
+
+- name: Generate an OpenSSL certificate signed with your own CA certificate
+  community.crypto.x509_certificate:
+    path: "{{ PKI_DIR }}/{{ item }}.crt"
+    csr_path: "{{ PKI_DIR }}/{{ item }}.csr"
+    ownca_path: "{{ PKI_DIR }}/ca.crt"
+    ownca_privatekey_path: "{{ PKI_DIR }}/ca.key"
+    ownca_not_after: +1000d"
+    provider: ownca
+  with_items:
+  - admin
+  - kube-controller-manager
+  - kube-proxy
+  - kube-scheduler
+  - kube-apiserver
+  - etcd-server
+  - service-account
+
+- name: Generate Admin certificate
+  openssl_certificate:
+    path: '{{ PKI_DIR }}/admin.crt'
+    csr_path: '{{ PKI_DIR }}/admin.csr'
+    ownca_path: '{{ PKI_DIR }}/ca.crt'
+    ownca_privatekey_path: '{{ PKI_DIR }}/ca.key'
+    provider: ownca
+
+
+- name: Generate Kube Controller Manager  certificate
+  openssl_certificate:
+    path: '{{ PKI_DIR }}/kube-controller-manager.crt'
+    csr_path: '{{ PKI_DIR }}/kube-controller-manager.csr'
+    ownca_path: '{{ PKI_DIR }}/ca.crt'
+    ownca_privatekey_path: '{{ PKI_DIR }}/ca.key'
+    provider: ownca
+
+
+- name: Generate Kube Proxy certificate
+  openssl_certificate:
+    path: '{{ PKI_DIR }}/kube-proxy.crt'
+    csr_path: '{{ PKI_DIR }}/kube-proxy.csr'
+    ownca_path: '{{ PKI_DIR }}/ca.crt'
+    ownca_privatekey_path: '{{ PKI_DIR }}/ca.key'
+    provider: ownca
+
+- name: Generate Kube Scheduler  certificate
+  openssl_certificate:
+    path: '{{ PKI_DIR }}/kube-scheduler.crt'
+    csr_path: '{{ PKI_DIR }}/kube-scheduler.csr'
+    ownca_path: '{{ PKI_DIR }}/ca.crt'
+    ownca_privatekey_path: '{{ PKI_DIR }}/ca.key'
+    provider: ownca
+
+- name: Generate Kubernetes API Server certificate
+  openssl_certificate:
+    path: '{{ PKI_DIR }}/kube-apiserver.crt'
+    csr_path: '{{ PKI_DIR }}/kube-apiserver.csr'
+    ownca_path: '{{ PKI_DIR }}/ca.crt'
+    ownca_privatekey_path: '{{ PKI_DIR }}/ca.key'
+    provider: ownca
+
+
+- name: Generate ETCD Server certificate
+  openssl_certificate:
+    path: '{{ PKI_DIR }}/etcd-server.crt'
+    csr_path: '{{ PKI_DIR }}/etcd-server.csr'
+    ownca_path: '{{ PKI_DIR }}/ca.crt'
+    ownca_privatekey_path: '{{ PKI_DIR }}/ca.key'
+    provider: ownca
+
